@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
 	int recvbuflen = DEFAULT_BUFLEN;
 	const char* sendbuf = "r";
 	char recvbuf[DEFAULT_BUFLEN];
+	ZeroMemory(&recvbuf, DEFAULT_BUFLEN);
 	iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
 	if (iResult == SOCKET_ERROR) {
 		printf("send faield %d\n", WSAGetLastError());
@@ -71,13 +72,12 @@ int main(int argc, char **argv) {
 		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
 		if (iResult > 0) {
 			printf("Bytes received %d\n", iResult);
-			for (int i = 0; i < 512; i++) {
-				if (recvbuf[i-1] != '*') {
-					std::cout << recvbuf[i];
+			for (int i = 0; i < DEFAULT_BUFLEN; i++) {
+				if (recvbuf[i] == '\0') {
+					continue;
 				}
 				else {
-					std::cout << std::endl;
-					break;
+					std::cout << recvbuf[i];
 				}
 			}
 		}
